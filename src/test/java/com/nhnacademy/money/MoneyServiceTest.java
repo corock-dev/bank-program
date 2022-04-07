@@ -138,8 +138,7 @@ class MoneyServiceTest {
     void wonToDollar() {
         ExchangeFee exchangeFee = new ExchangeFee();
         Money dollarMoney = exchangeFee.exchangeToDollar(Money.dollar(BigDecimal.valueOf(1_000)));
-        assertThat(dollarMoney.getAmount())
-                .isEqualTo(BigDecimal.valueOf(1));
+        assertThat(dollarMoney.getAmount().compareTo(BigDecimal.valueOf(1)) == 0).isSameAs(true);
         assertThat(dollarMoney.getCurrency())
                 .isEqualTo(Currency.valueOf("DOLLAR"));
     }
@@ -153,5 +152,25 @@ class MoneyServiceTest {
                 .isEqualTo(BigDecimal.valueOf(5250));
         assertThat(wonMoney.getCurrency())
                 .isEqualTo(Currency.valueOf("WON"));
+    }
+
+    @DisplayName("달러 -> 원화: 5원 이상 -> 10원으로 반올림")
+    @Test
+    void dollarToWon_roundOff() {
+        ExchangeFee exchangeFee = new ExchangeFee();
+        Money dollarMoney = Money.dollar(BigDecimal.valueOf(5.255));
+
+        assertThat(exchangeFee.exchangeToWon(dollarMoney).getAmount())
+            .isEqualTo(BigDecimal.valueOf(5260));
+    }
+
+    @DisplayName("원화 -> 달러: $0.005 이상 -> $0.01 반올림")
+    @Test
+    void wonToDollar_roundOff() {
+        ExchangeFee exchangeFee = new ExchangeFee();
+        Money wonMoney = Money.dollar(BigDecimal.valueOf(5255));
+
+        assertThat(exchangeFee.exchangeToDollar(wonMoney).getAmount())
+            .isEqualTo(BigDecimal.valueOf(5.26));
     }
 }

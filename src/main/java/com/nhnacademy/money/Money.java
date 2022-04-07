@@ -42,6 +42,7 @@ public class Money {
         return currency;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
