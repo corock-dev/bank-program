@@ -6,7 +6,7 @@ import static com.nhnacademy.money.Currency.WON;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Money {
+public class Money implements Exchangable {
     private BigDecimal amount;
     private Currency currency;
 
@@ -75,4 +75,8 @@ public class Money {
         }
     }
 
+    @Override
+    public Money exchange(Money beforeExchangeMoney, Currency to) {
+        return currency.exchange(beforeExchangeMoney, to);
+    }
 }
