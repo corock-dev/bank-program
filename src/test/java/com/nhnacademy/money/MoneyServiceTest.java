@@ -1,6 +1,5 @@
 package com.nhnacademy.money;
 
-
 import static com.nhnacademy.money.Currency.DOLLAR;
 import static com.nhnacademy.money.Currency.WON;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,5 +104,18 @@ class MoneyServiceTest {
         assertThatThrownBy(() -> m1.subtract((m2)))
             .isInstanceOf(InvalidCurrencyException.class)
             .hasMessageContaining("currency");
+    }
+
+    @DisplayName("통화는 달러화와 원화만이 존재")
+    @Test
+    void currency_onlyWonDollar() {
+        List<Currency> currencies;
+        currencies = List.of(Currency.values());
+        assertThat(currencies.size())
+            .isEqualTo(2);
+        assertThat(currencies.contains(Currency.valueOf("WON")))
+            .isTrue();
+        assertThat(currencies.contains(Currency.valueOf("DOLLAR")))
+            .isTrue();
     }
 }
