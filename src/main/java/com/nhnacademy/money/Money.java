@@ -1,10 +1,9 @@
 package com.nhnacademy.money;
 
-import static com.nhnacademy.money.Currency.DOLLAR;
-import static com.nhnacademy.money.Currency.WON;
-
 import java.math.BigDecimal;
 import java.util.Objects;
+
+import static com.nhnacademy.money.Currency.*;
 
 public class Money implements Exchangable {
     private BigDecimal amount;
@@ -21,7 +20,7 @@ public class Money implements Exchangable {
     }
 
     public static Money dollar(BigDecimal amount) {
-       return new Money(amount, DOLLAR);
+        return new Money(amount, DOLLAR);
     }
 
     public static Money won(BigDecimal amount) {
@@ -29,9 +28,13 @@ public class Money implements Exchangable {
 
     }
 
+    public static Money meso(BigDecimal amount) {
+        return new Money(amount, MESO);
+    }
+
     public Money add(Money other) {
         checkCurrency(other);
-        return new Money(this.amount.add(other.amount) , this.currency);
+        return new Money(this.amount.add(other.amount), this.currency);
     }
 
     public BigDecimal getAmount() {
@@ -70,8 +73,8 @@ public class Money implements Exchangable {
     private void checkCurrency(Money other) {
         if (!Objects.equals(this.currency, other.currency)) {
             throw new InvalidCurrencyException(
-                "Not matched currency. this currency : " + this.currency + System.lineSeparator() +
-                    "other currency " + other.currency);
+                    "Not matched currency. this currency : " + this.currency + System.lineSeparator() +
+                            "other currency " + other.currency);
         }
     }
 

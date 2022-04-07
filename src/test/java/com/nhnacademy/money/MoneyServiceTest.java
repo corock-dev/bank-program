@@ -12,6 +12,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class MoneyServiceTest {
 
@@ -156,7 +158,7 @@ class MoneyServiceTest {
 
     @DisplayName("다른 통화(ex: 유로화) 추가해보기 (환율은 임의대로)")
     @Test
-    void currency() {
+    void add_anotherCurrency() {
         List<Currency> currencies;
         currencies = List.of(Currency.values());
 
@@ -172,5 +174,31 @@ class MoneyServiceTest {
                 .isEqualTo(BigDecimal.valueOf(52500));
         assertThat(exchangedMoney.getCurrency())
                 .isEqualTo(Currency.valueOf("MESO"));
+    }
+
+    @DisplayName("마일리지가 10_000원 이상일 경우에는 달마다 1_000원씩 차감된다")
+    @Test()
+    void ifMileageGreaterThanOrEqual10000() {
+        Money mesoMoney = Money.meso(BigDecimal.valueOf(10_000));
+        Bank bank = new Bank();
+
+        Money subtractedMoney = bank.subtractMileage(mesoMoney, 1);
+        assertThat(subtractedMoney.getAmount()).isEqualTo(BigDecimal.valueOf(9_000));
+
+        subtractedMoney = bank.subtractMileage(mesoMoney, 2);
+        assertThat(subtractedMoney.getAmount()).isEqualTo(BigDecimal.valueOf(8_000));
+
+        subtractedMoney = bank.subtractMileage(mesoMoney, 3);
+        assertThat(subtractedMoney.getAmount()).isEqualTo(BigDecimal.valueOf(7_000));
+    }
+
+    @DisplayName("마일리지가 10_000원 미만일 경우에는 차감되지 않는다")
+    @Test()
+    void ifMileageLessThan10000() {
+        Money mesoMoney = Money.meso(BigDecimal.valueOf(9_999));
+        Bank bank = new Bank();
+
+        Money notSubtractedMoney = bank.subtractMileage(mesoMoney, 1);
+        assertThat(notSubtractedMoney.getAmount()).isEqualTo(BigDecimal.valueOf(9_999));
     }
 }
