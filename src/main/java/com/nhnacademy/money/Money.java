@@ -51,7 +51,7 @@ public class Money {
             return false;
         }
         Money money = (Money) o;
-        return amount == money.amount && currency == money.currency;
+        return Objects.equals(amount, money.amount) && currency == money.currency;
     }
 
     @Override

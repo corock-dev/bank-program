@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,12 @@ class MoneyServiceTest {
     @DisplayName("1,000원 + 1,000원 = 2,000원")
     @Test
     void add() {
-        Money m1 = Money.won(BigDecimal.valueOf(1000));
-        Money m2 = Money.won(BigDecimal.valueOf(1000));
+        Money m1 = Money.won(BigDecimal.valueOf(1_000));
+        Money m2 = Money.won(BigDecimal.valueOf(1_000));
 
         Money sum = m1.add(m2);
 
-        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(2000));
+        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(2_000));
         assertThat(sum.getCurrency()).isEqualTo(WON);
     }
 
@@ -47,8 +48,8 @@ class MoneyServiceTest {
         BigDecimal amount = BigDecimal.valueOf(-1);
 
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> new Money(amount, WON))
-            .withMessageContaining("Invaild", amount);
+                .isThrownBy(() -> new Money(amount, WON))
+                .withMessageContaining("Invaild", amount);
     }
 
     @DisplayName("5$ + 5$ = 10$")
@@ -70,8 +71,8 @@ class MoneyServiceTest {
         Money m2 = Money.won(BigDecimal.valueOf(5000));
 
         assertThatThrownBy(() -> m1.add((m2)))
-            .isInstanceOf(InvalidCurrencyException.class)
-            .hasMessageContaining("currency");
+                .isInstanceOf(InvalidCurrencyException.class)
+                .hasMessageContaining("currency");
     }
 
     @DisplayName("5 - 6 = 오류")
@@ -81,13 +82,13 @@ class MoneyServiceTest {
         Money m2 = Money.dollar(BigDecimal.valueOf(6));
 
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> m1.subtract(m2))
-            .withMessageContaining("greater");
+                .isThrownBy(() -> m1.subtract(m2))
+                .withMessageContaining("greater");
     }
 
     @DisplayName("5 - 4 = 1")
     @Test
-    void subtrack() {
+    void subtract() {
         Money m1 = Money.dollar(BigDecimal.valueOf(5));
         Money m2 = Money.dollar(BigDecimal.valueOf(4));
 
@@ -98,24 +99,24 @@ class MoneyServiceTest {
 
     @DisplayName("돈을 뺄 시 통화가 다르면 더할수없다")
     @Test
-    void subtrack_notMatchCurrency_throwex() {
+    void subtract_notMatchCurrency_throwEx() {
         Money m1 = Money.dollar(BigDecimal.valueOf(5));
         Money m2 = Money.won(BigDecimal.valueOf(5000));
 
         assertThatThrownBy(() -> m1.subtract((m2)))
-            .isInstanceOf(InvalidCurrencyException.class)
-            .hasMessageContaining("currency");
+                .isInstanceOf(InvalidCurrencyException.class)
+                .hasMessageContaining("currency");
     }
 
     @DisplayName("5.25$ + 5.25$ = 10.50$ (소숫점 이하 2자리)")
     @Test
-    void add_decimalPoint(){
-        Money m1 = Money.dollar(BigDecimal.valueOf(525,2));
-        Money m2 = Money.dollar(BigDecimal.valueOf(525,2));
+    void add_decimalPoint() {
+        Money m1 = Money.dollar(BigDecimal.valueOf(525, 2));
+        Money m2 = Money.dollar(BigDecimal.valueOf(525, 2));
 
         Money sum = m1.add(m2);
 
-        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(1050,2));
+        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(1050, 2));
         assertThat(sum.getCurrency()).isEqualTo(DOLLAR);
     }
 
@@ -125,10 +126,21 @@ class MoneyServiceTest {
         List<Currency> currencies;
         currencies = List.of(Currency.values());
         assertThat(currencies.size())
-            .isEqualTo(2);
+                .isEqualTo(2);
         assertThat(currencies.contains(Currency.valueOf("WON")))
-            .isTrue();
+                .isTrue();
         assertThat(currencies.contains(Currency.valueOf("DOLLAR")))
-            .isTrue();
+                .isTrue();
     }
+
+    // @DisplayName("5.25$ -> 5,250원")
+    // @Test
+    // void dollarToWOn() {
+    //     ExchangeFee exchangeFee = new ExchangeFee();
+    //     Money wonMoney = exchangeFee.exchangeToWon(Money.dollar(BigDecimal.valueOf(5.25)));
+    //     assertThat(wonMoney.getAmount())
+    //             .isEqualTo(5250);
+    //     assertThat(wonMoney.getCurrency())
+    //             .isEqualTo(Currency.valueOf("WON"));
+    // }
 }
