@@ -211,10 +211,11 @@ class MoneyServiceTest {
     @DisplayName("마일리지가 10_000원 미만일 경우에는 차감되지 않는다")
     @Test()
     void ifMileageLessThan10000() {
-        Money mesoMoney = Money.meso(BigDecimal.valueOf(9_999));
+        long amount = 9_999L;
+        Money mesoMoney = Money.meso(BigDecimal.valueOf(amount));
         Bank bank = new Bank();
 
         Money notSubtractedMoney = bank.subtractMileage(mesoMoney, 1);
-        assertThat(notSubtractedMoney.getAmount()).isEqualTo(BigDecimal.valueOf(9_999));
+        assertThat(notSubtractedMoney.getAmount()).isEqualTo(BigDecimal.valueOf(amount));
     }
 }
