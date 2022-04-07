@@ -133,14 +133,25 @@ class MoneyServiceTest {
                 .isTrue();
     }
 
-    // @DisplayName("5.25$ -> 5,250원")
-    // @Test
-    // void dollarToWOn() {
-    //     ExchangeFee exchangeFee = new ExchangeFee();
-    //     Money wonMoney = exchangeFee.exchangeToWon(Money.dollar(BigDecimal.valueOf(5.25)));
-    //     assertThat(wonMoney.getAmount())
-    //             .isEqualTo(5250);
-    //     assertThat(wonMoney.getCurrency())
-    //             .isEqualTo(Currency.valueOf("WON"));
-    // }
+    @DisplayName("1,000원 - 환전-> 1$")
+    @Test
+    void wonToDollar() {
+        ExchangeFee exchangeFee = new ExchangeFee();
+        Money dollarMoney = exchangeFee.exchangeToDollar(Money.dollar(BigDecimal.valueOf(1_000)));
+        assertThat(dollarMoney.getAmount())
+                .isEqualTo(BigDecimal.valueOf(1));
+        assertThat(dollarMoney.getCurrency())
+                .isEqualTo(Currency.valueOf("DOLLAR"));
+    }
+
+    @DisplayName("5.25$ -> 5,250원")
+    @Test
+    void dollarToWon() {
+        ExchangeFee exchangeFee = new ExchangeFee();
+        Money wonMoney = exchangeFee.exchangeToWon(Money.dollar(BigDecimal.valueOf(5.25)));
+        assertThat(wonMoney.getAmount())
+                .isEqualTo(BigDecimal.valueOf(5250));
+        assertThat(wonMoney.getCurrency())
+                .isEqualTo(Currency.valueOf("WON"));
+    }
 }
