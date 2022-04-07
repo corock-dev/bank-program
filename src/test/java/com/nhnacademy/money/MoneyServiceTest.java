@@ -173,6 +173,8 @@ class MoneyServiceTest {
 
         assertThat(exchangeFee.exchangeToDollar(wonMoney).getAmount())
             .isEqualTo(BigDecimal.valueOf(5.26));
+    }
+    
     @DisplayName("다른 통화(ex: 유로화) 추가해보기 (환율은 임의대로)")
     @Test
     void add_anotherCurrency() {
