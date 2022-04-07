@@ -3,35 +3,38 @@ package com.nhnacademy.money;
 import static com.nhnacademy.money.Currency.DOLLAR;
 import static com.nhnacademy.money.Currency.WON;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Money {
-    private long amount;
+    private BigDecimal amount;
     private Currency currency;
 
-    public Money(long amount, Currency currency) {
-        if (amount < 0) {
+    public Money(BigDecimal amount, Currency currency) {
+        BigDecimal zero = BigDecimal.valueOf(0);
+
+        if (amount.compareTo(zero) < 0) {
             throw new IllegalArgumentException("Invaild amount: " + amount);
         }
         this.amount = amount;
         this.currency = currency;
     }
 
-    public static Money dollar(long amount) {
+    public static Money dollar(BigDecimal amount) {
        return new Money(amount, DOLLAR);
     }
 
-    public static Money won(long amount) {
+    public static Money won(BigDecimal amount) {
         return new Money(amount, WON);
 
     }
 
     public Money add(Money other) {
         checkCurrency(other);
-        return new Money(this.amount + other.amount, this.currency);
+        return new Money(this.amount.add(other.amount) , this.currency);
     }
 
-    public long getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
 
@@ -58,10 +61,10 @@ public class Money {
 
     public Money subtract(Money other) {
         checkCurrency(other);
-        if (this.amount < other.amount) {
+        if (this.amount.compareTo(other.amount) < 0) {
             throw new IllegalArgumentException("other money greater then this ");
         }
-        return new Money(this.amount - other.amount, this.currency);
+        return new Money(this.amount.subtract(other.amount), this.currency);
     }
 
     private void checkCurrency(Money other) {

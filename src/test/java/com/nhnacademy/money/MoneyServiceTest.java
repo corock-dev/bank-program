@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,20 +23,20 @@ class MoneyServiceTest {
     @DisplayName("1,000원 + 1,000원 = 2,000원")
     @Test
     void add() {
-        Money m1 = Money.won(1_000L);
-        Money m2 = Money.won(1_000L);
+        Money m1 = Money.won(BigDecimal.valueOf(1000));
+        Money m2 = Money.won(BigDecimal.valueOf(1000));
 
         Money sum = m1.add(m2);
 
-        assertThat(sum.getAmount()).isEqualTo(2_000L);
+        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(2000));
         assertThat(sum.getCurrency()).isEqualTo(WON);
     }
 
     @DisplayName("2,000원과 2,000원은 같다.(equals)")
     @Test
     void checkAccountMoney() {
-        Money m1 = new Money(2_000L, DOLLAR);
-        Money m2 = new Money(2_000L, DOLLAR);
+        Money m1 = new Money(BigDecimal.valueOf(2000), DOLLAR);
+        Money m2 = new Money(BigDecimal.valueOf(2000), DOLLAR);
 
         assertThat(m1.equals(m2)).isTrue();
     }
@@ -43,7 +44,7 @@ class MoneyServiceTest {
     @DisplayName("돈은 음수일수없다")
     @Test
     void money_isNotNegative_IllgalEx() {
-        long amount = -1L;
+        BigDecimal amount = BigDecimal.valueOf(-1);
 
         assertThatIllegalArgumentException()
             .isThrownBy(() -> new Money(amount, WON))
@@ -53,20 +54,20 @@ class MoneyServiceTest {
     @DisplayName("5$ + 5$ = 10$")
     @Test
     void add_5DollorPlus5Dolalr() {
-        Money m1 = Money.dollar(5);
-        Money m2 = Money.dollar(5);
+        Money m1 = Money.dollar(BigDecimal.valueOf(5));
+        Money m2 = Money.dollar(BigDecimal.valueOf(5));
 
         Money sum = m1.add(m2);
 
-        assertThat(sum.getAmount()).isEqualTo(10);
+        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(10));
         assertThat(sum.getCurrency()).isEqualTo(DOLLAR);
     }
 
     @DisplayName("돈을 더할 시 통화가 다르면 더할수없다")
     @Test
     void add_notMatchCurrency_throwex() {
-        Money m1 = Money.dollar(5);
-        Money m2 = Money.won(5_000L);
+        Money m1 = Money.dollar(BigDecimal.valueOf(5));
+        Money m2 = Money.won(BigDecimal.valueOf(5000));
 
         assertThatThrownBy(() -> m1.add((m2)))
             .isInstanceOf(InvalidCurrencyException.class)
@@ -76,8 +77,8 @@ class MoneyServiceTest {
     @DisplayName("5 - 6 = 오류")
     @Test
     void subtrack_negative_throwEx() {
-        Money m1 = Money.dollar(5);
-        Money m2 = Money.dollar(6);
+        Money m1 = Money.dollar(BigDecimal.valueOf(5));
+        Money m2 = Money.dollar(BigDecimal.valueOf(6));
 
         assertThatIllegalArgumentException()
             .isThrownBy(() -> m1.subtract(m2))
@@ -87,23 +88,35 @@ class MoneyServiceTest {
     @DisplayName("5 - 4 = 1")
     @Test
     void subtrack() {
-        Money m1 = Money.dollar(5);
-        Money m2 = Money.dollar(4);
+        Money m1 = Money.dollar(BigDecimal.valueOf(5));
+        Money m2 = Money.dollar(BigDecimal.valueOf(4));
 
         Money result = m1.subtract(m2);
 
-        assertThat(result).isEqualTo(Money.dollar(1));
+        assertThat(result).isEqualTo(Money.dollar(BigDecimal.valueOf(1)));
     }
 
     @DisplayName("돈을 뺄 시 통화가 다르면 더할수없다")
     @Test
     void subtrack_notMatchCurrency_throwex() {
-        Money m1 = Money.dollar(5);
-        Money m2 = Money.won(5_000L);
+        Money m1 = Money.dollar(BigDecimal.valueOf(5));
+        Money m2 = Money.won(BigDecimal.valueOf(5000));
 
         assertThatThrownBy(() -> m1.subtract((m2)))
             .isInstanceOf(InvalidCurrencyException.class)
             .hasMessageContaining("currency");
+    }
+
+    @DisplayName("5.25$ + 5.25$ = 10.50$ (소숫점 이하 2자리)")
+    @Test
+    void add_decimalPoint(){
+        Money m1 = Money.dollar(BigDecimal.valueOf(525,2));
+        Money m2 = Money.dollar(BigDecimal.valueOf(525,2));
+
+        Money sum = m1.add(m2);
+
+        assertThat(sum.getAmount()).isEqualTo(BigDecimal.valueOf(1050,2));
+        assertThat(sum.getCurrency()).isEqualTo(DOLLAR);
     }
 
     @DisplayName("통화는 달러화와 원화만이 존재")
