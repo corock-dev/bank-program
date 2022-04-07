@@ -1,41 +1,75 @@
 package com.nhnacademy.money;
 
+import static com.nhnacademy.money.Currency.DOLLAR;
+import static com.nhnacademy.money.Currency.WON;
+
+import java.util.Objects;
+
 public class Money {
     private long amount;
     private Currency currency;
 
-    public Money(long money, Currency currency) {
-        this.amount = money;
+    public Money(long amount, Currency currency) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Invaild amount: " + amount);
+        }
+        this.amount = amount;
         this.currency = currency;
     }
 
+    public static Money dollar(long amount) {
+       return new Money(amount, DOLLAR);
+    }
+
+    public static Money won(long amount) {
+        return new Money(amount, WON);
+
+    }
+
+    public Money add(Money other) {
+        checkCurrency(other);
+        return new Money(this.amount + other.amount, this.currency);
+    }
+
     public long getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setAmount(long amount) {
-        if(amount < 0){
-            throw new NegativeMoneyWonException("Negative Money");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        this.amount = amount;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Money money = (Money) o;
+        return amount == money.amount && currency == money.currency;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this.amount != ((Money) obj).getAmount()) {
-            return false;
-        }
-        if (this.currency != ((Money) obj).getCurrency()) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        return Objects.hash(amount, currency);
     }
 
-    public void add(Money money) {
-        this.amount += money.getAmount();
+    public Money subtract(Money other) {
+        checkCurrency(other);
+        if (this.amount < other.amount) {
+            throw new IllegalArgumentException("other money greater then this ");
+        }
+        return new Money(this.amount - other.amount, this.currency);
     }
+
+    private void checkCurrency(Money other) {
+        if (!Objects.equals(this.currency, other.currency)) {
+            throw new InvalidCurrencyException(
+                "Not matched currency. this currency : " + this.currency + System.lineSeparator() +
+                    "other currency " + other.currency);
+        }
+    }
+
 }
