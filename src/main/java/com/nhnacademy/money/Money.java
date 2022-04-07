@@ -4,6 +4,11 @@ public class Money {
     private long amount;
     private Currency currency;
 
+    public Money(long money, Currency currency) {
+        this.amount = money;
+        this.currency = currency;
+    }
+
     public long getAmount() {
         return amount;
     }
@@ -19,19 +24,18 @@ public class Money {
         this.amount = amount;
     }
 
-    public Money(long amount, Currency currency) {
-        this.amount = amount;
-        this.currency = currency;
-    }
-
     @Override
     public boolean equals(Object obj) {
-        if (this.amount != ((Money)obj).getAmount()) {
+        if (this.amount != ((Money) obj).getAmount()) {
             return false;
         }
-        if (this.currency != ((Money)obj).getCurrency()) {
+        if (this.currency != ((Money) obj).getCurrency()) {
             return false;
         }
         return true;
+    }
+
+    public void add(Money money) {
+        this.amount += money.getAmount();
     }
 }
