@@ -8,9 +8,9 @@ This repository is dedicated to studying the book 《[내 코드가 그렇게 �
 
 ![is-my-code-that-strange](https://ebook.insightbook.co.kr/media/cover/generated/150_600.webp?v=20230625224112)
 
-|      Title       |      Author      |   Publisher   |     ISBN      | Publication Date |
-|:----------------:|:----------------:|:-------------:|:-------------:|:----------------:|
-| 내 코드가 그렇게 이상한가요? | 센바 다이야 저/윤인성 역 | 인사이트(insight) | 9788966263998 |    2023-06-19    |
+|      Title       |      Author      |   Publisher   | Publication Date |
+|:----------------:|:----------------:|:-------------:|:----------------:|
+| 내 코드가 그렇게 이상한가요? | 센바 다이야 저 / 윤인성 역 | 인사이트(insight) |    2023-06-19    |
 
 ## Getting Started
 
